@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family: Arial, Helvetica, sans-serif;}
+div#video_controls_bar{ background: #333; padding:10px 0; color:#CCC; width: 80%;margin: 0 auto;}
+input#seekslider{ width:600px; }
+input#volumeslider{ width: 80px;}
+#my_video{width: 80%; height: 80%; margin: 0 auto;}
+#video_player_box { width: 100%;  height: 100%; text-align: center;}
+#myForm{display: none; position:fixed; left: 51%;top: 31%; -webkit-transition: all 1s ease; -moz-transition: all 1s ease;  -o-transition: all 1s ease;  transition: all 1s ease;}
+#myForm1{display: none; position:fixed; left:51%;top: 21%; -webkit-transition: all 1s ease; -moz-transition: all 1s ease;  -o-transition: all 1s ease;  transition: all 1s ease;}
+#myForm2{display: none; position:fixed; left: 51%;top: 30%; -webkit-transition: all 1s ease; -moz-transition: all 1s ease;  -o-transition: all 1s ease;  transition: all 1s ease;}
+#myForm3{display: none; position:fixed; left: 51%;top: 32%; -webkit-transition: all 1s ease; -moz-transition: all 1s ease;  -o-transition: all 1s ease;  transition: all 1s ease;}
+#myForm4{display: none; position:fixed; left: 25%;bottom: 15%; -webkit-transition: all 1s ease; -moz-transition: all 1s ease;  -o-transition: all 1s ease;  transition: all 1s ease;}
+#contactForm {  padding: 1em;  width: 400px;  text-align: center;  background: rgba(255, 255, 255, 0.4);  border-radius: 5%;  }
+#contactForm.fullwidth { width: 600px; }
+#contactForm h2{font-size: 1.2em;}
+#contactForm input, #contactForm textarea { margin: .8em auto; font-family: inherit; text-transform: inherit; font-size: inherit;  display: block; width:90%; padding: .4em;}
+#contactForm [type="radio"], #contactForm [type="checkbox"]{ width: 20px; display: initial;}
+#contactForm textarea { height: 66px; resize: none; }
+.lf, .rf{width: 40%; display: inline-block; text-align: top;}
+.lastbtn{margin: 0!important;}
+#contactForm .formBtn { width: 140px; display: inline-block;  background: #25a9e0; color: #fff; font-weight: 100; font-size: 1.2em; border: none; height: 40px;}
+.mystyle{opacity: 0; left:90%; transform:translateX(50%);}
+
+#seekslider { -webkit-appearance: none; width: 100%; height: 25px; background: #d3d3d3;  outline: none;  opacity: 0.7;  -webkit-transition: .2s;  transition: opacity .2s;}
+#seekslider:hover {  opacity: 1;}
+#seekslider::-webkit-slider-thumb {  -webkit-appearance: none;  appearance: none;  width: 25px;  height: 25px;  background: #4CAF50;  cursor: pointer;}
+#seekslider::-moz-range-thumb {  width: 25px;  height: 25px;  background: #4CAF50;  cursor: pointer;}
+
+#playpausebtn .play-pause {display: inline-block; font-size: 3em; float: left;	text-shadow: 0 0 0 #fff;color: rgba(255,255,255,0.8);	width: 10%;	padding: 17px 0 0 3%;	cursor: pointer;	font-variant: small-caps;}
+#playpausebtn .play, #playpausebtn .pause-button {	-webkit-transition: all 0.2s ease-out;}
+#playpausebtn .play .pause-button, #playpausebtn .pause .play-button {	display: none;}
+#playpausebtn .pause-button {	padding: 5px 2px;	box-sizing: border-box;	-moz-box-sizing: border-box;	height: 34px;}
+#playpausebtn .pause-button span {	background: #fff;	width: 8px;	height: 24px;	float: left;	display: block;}
+#playpausebtn .pause-button span:first-of-type {	margin: 0 4px 0 0;}
+#playpausebtn .time {	color: #fff;	font-weight: bold;	font-size: 1.2em;	position: absolute;	right: 0;	top: 24px;}
+#playpausebtn .stime, .ttime {	color: #444;}
+#playpausebtn .play:hover {	text-shadow: 0 0 5px #fff;}
+#playpausebtn .play:active, #playpausebtn .pause-button:active span {	text-shadow: 0 0 7px #fff;}
+#playpausebtn .pause-button:hover span {	box-shadow: 0 0 5px #fff;} #playpausebtn .pause-button:active span {	box-shadow: 0 0 7px #fff;}
+
+</style>
+<script>
+var vid, playbtn, seekslider, curtimetext, durtimetext, mutebtn, volumeslider, fullscreenbtn,flag=0;
+function intializePlayer(){
+	// Set object references
+	vid = document.getElementById("my_video");
+	playbtn = document.getElementById("playpausebtn");
+	seekslider = document.getElementById("seekslider");
+	curtimetext = document.getElementById("curtimetext");
+	durtimetext = document.getElementById("durtimetext");
+	mutebtn = document.getElementById("mutebtn");
+	volumeslider = document.getElementById("volumeslider");
+	fullscreenbtn = document.getElementById("fullscreenbtn");
+	// Add event listeners
+	playbtn.addEventListener("click",playPause,false);
+	seekslider.addEventListener("change",vidSeek,false);
+	vid.addEventListener("timeupdate",seektimeupdate,false);
+	mutebtn.addEventListener("click",vidmute,false);
+	volumeslider.addEventListener("change",setvolume,false);
+	fullscreenbtn.addEventListener("click",goFullScreen,false);
+}
+window.onload = intializePlayer;
+function playPause(){
+	if(vid.paused){
+		vid.play();
+		playbtn.innerHTML = "Pause";
+	} else {
+		vid.pause();
+		playbtn.innerHTML = "Play";
+	}
+}
+function vidSeek(){
+	var seekto = vid.duration * (seekslider.value / 100);
+	vid.currentTime = seekto;
+}
+function seektimeupdate(){
+	var nt = vid.currentTime * (100 / vid.duration);
+	seekslider.value = nt;
+	console.log(vid.currentTime);
+
+
+	var t = Math.floor(vid.currentTime);
+
+		if(flag==t)
+		{
+
+			
+		}else
+		{
+			flag=t;
+
+				if(t==17)
+				
+				{
+                    setTimeout(function(){
+                showElement("myForm");
+                //alert("hiiiiiiiiiiiiiiiiiiiiii");
+                vid.pause();}, 700);
+					
+				}
+
+
+                else if(t==19)
+                {
+                    setTimeout(function(){
+                    document.getElementById("myForm").classList.add('mystyle');	
+                    }, 700);
+                }
+
+                else if(t==23)
+                {
+                    setTimeout(function(){
+                    document.getElementById("myForm").classList.remove('mystyle');	
+                    hideElement("myForm");
+                    showElement("myForm1");
+                    //alert("hiiiiiiiiiiiiiiiiiiiiii");
+                    vid.pause(); }, 100);
+                }
+
+
+                else if(t==25)
+                {
+
+                    document.getElementById("myForm1").classList.add('mystyle');
+                }
+
+                else if(t==28)
+                {
+                    setTimeout(function(){ document.getElementById("myForm1").classList.remove('mystyle');	
+		            hideElement("myForm1");
+	                showElement("myForm2");
+	                //alert("hiiiiiiiiiiiiiiiiiiiiii");
+	                vid.pause(); }, 100);
+                    
+                }
+                else if(t==29)
+                {
+                    setTimeout(function(){
+                    document.getElementById("myForm2").classList.add('mystyle');
+                }, 0);
+                }
+
+                else if(t==32)
+                {
+                    setTimeout(function(){
+                    document.getElementById("myForm2").classList.remove('mystyle');	
+		            hideElement("myForm2");
+	                showElement("myForm3");
+	                //alert("hiiiiiiiiiiiiiiiiiiiiii");
+                    vid.pause();
+                }, 600);
+                }
+                else if(t==33)
+                {
+                    setTimeout(function(){
+                    document.getElementById("myForm3").classList.add('mystyle');
+                }, 800);
+                }
+
+                else if(t==37)
+                {
+                setTimeout(function(){
+                document.getElementById("myForm3").classList.remove('mystyle');	
+                hideElement("myForm3");
+                showElement("myForm4");
+                //alert("hiiiiiiiiiiiiiiiiiiiiii");
+                vid.pause();
+                }, 500);
+                }
+                else if(t==38)
+                {
+                setTimeout(function(){
+                document.getElementById("myForm4").classList.add('mystyle');
+                }, 500);
+                }
+
+
+                else
+                {
+
+
+                }
+
+
+
+		}
+
+	if((vid.currentTime)>=14.900 && (vid.currentTime)<=15)
+	{
+	
+	}
+	if((vid.currentTime)>=16 && (vid.currentTime)<=17)
+	{
+		
+	}
+	
+
+	if((vid.currentTime)>=20.45 && (vid.currentTime)<=20.8)
+	{
+		
+	}
+	if((vid.currentTime)>=21 && (vid.currentTime)<=22)
+	{
+			
+	}
+
+	if((vid.currentTime)>=23.6 && (vid.currentTime)<=23.95)
+	{
+		
+	}
+	if((vid.currentTime)>=24 && (vid.currentTime)<=24)
+	{
+			
+	}
+
+	if((vid.currentTime)>=25 && (vid.currentTime)<=25)
+	{
+	
+	}
+	if((vid.currentTime)>=27 && (vid.currentTime)<=27)
+	{
+			
+	}
+
+
+	var curmins = Math.floor(vid.currentTime / 60);
+	var cursecs = Math.floor(vid.currentTime - curmins * 60);
+	var durmins = Math.floor(vid.duration / 60);
+	var dursecs = Math.floor(vid.duration - durmins * 60);
+	if(cursecs < 10){ cursecs = "0"+cursecs; }
+	if(dursecs < 10){ dursecs = "0"+dursecs; }
+	if(curmins < 10){ curmins = "0"+curmins; }
+	if(durmins < 10){ durmins = "0"+durmins; }
+	curtimetext.innerHTML = curmins+":"+cursecs;
+	durtimetext.innerHTML = durmins+":"+dursecs;
+}
+function showForm(id){
+	var x = document.getElementById(id);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+function showElement(id){
+	var x = document.getElementById(id);
+	x.style.display = "block";
+  
+}
+function hideElement(id){
+	var y = document.getElementById(id);
+	y.style.display = "none";
+}
+function vidmute(){
+	if(vid.muted){
+		vid.muted = false;
+		mutebtn.innerHTML = "Mute";
+	} else {
+		vid.muted = true;
+		mutebtn.innerHTML = "Unmute";
+	}
+}
+function setvolume(){
+	vid.volume = volumeslider.value / 100;
+}
+
+function goFullScreen() {
+	var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement ||
+document.webkitFullscreenElement || document.msFullscreenElement;
+	if(fullscreenElement){
+  	exitFullscreen();
+  }else {
+  	toggleFullScreen(document.getElementById('video_player_box'));
+  }
+  
+}
+
+function toggleFullScreen(x){
+
+	if(x.requestFullScreen){
+		x.requestFullScreen();
+	} else if(x.webkitRequestFullScreen){
+		x.webkitRequestFullScreen();
+	} else if(x.mozRequestFullScreen){
+		x.mozRequestFullScreen();
+	}
+}
+
+function exitFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  }
+}
+</script>
+</head>
+<body>
+
+<div id="video_player_box">
+
+  <video id="my_video"  disablePictureInPicture autoplay preload="auto">
+    <source src="tridibsir.mp4">
+  </video>
+   <div id="clickid" style="color:blue;display: none;position:fixed; left: 819px;top: 232px; background-color:yellow;"onclick="playPause(); showForm('myForm');">click here signup</div>
+   <div id="myForm" style="">
+		<div id="contactForm">
+			<h2>We would like to know your industry?</h2>			
+			<form >
+				<p>
+					<label>
+							<input type="radio" name="industry" value="Travel Agent" checked>
+							<span>Travel Agent </span>
+					</label>
+					<label>
+							<input type="radio" name="industry" value="Hotel Or Retaurant Owner">
+							<span>Hotel Or Retaurant Owner</span>
+					</label><br/>
+					<label>
+							<input type="radio" name="industry" value="Event Management Company">
+							<span>Event Management Company</span>
+					</label><br/>
+					<label>
+							<input type="radio" name="industry" value="Education Institution">
+							<span>Education Institution</span>
+					</label>
+					<label>
+							<input type="radio" name="industry" value="Other">
+							<span>Other</span>
+					</label>
+				</p>
+				<input  onclick="playPause();" class="formBtn" type="button" value="Submit" />
+			</form>
+		</div>
+</div>
+<div id="myForm1" style="">
+		<div id="contactForm">
+			<h2>What services are you looking for?</h2>			
+			<form action="#">
+				<p>
+					<label>
+							<input type="checkbox" name="services[]" value="Website Design"/>
+							<span>Website Design</span>
+					</label>
+					<label>
+							<input type="checkbox" name="services[]" value="App Development"/>
+							<span>App Development</span>
+					</label><br/>
+					<label>
+							<input type="checkbox" name="services[]" value="Search Engine Optimization"/>
+							<span>Search Engine Optimization</span>
+					</label><br/>
+					<label>
+							<input type="checkbox" name="services[]" value="Social Media Marketing"/>
+							<span>Social Media Marketing</span>
+					</label><br/>
+					<label>
+							<input type="checkbox" name="services[]" value="E-commerce Platform"/>
+							<span>E-commerce Platform</span>
+					</label>
+					<label>
+							<input type="checkbox" name="services[]" value="Augmented Reality"/>
+							<span>Augmented Reality</span>
+					</label><br/>
+					<label>
+							<input type="checkbox" name="services[]" value="Virtual Reality"/>
+							<span>Virtual Reality</span>
+					</label>
+					<label>
+							<input type="checkbox" name="services[]" value="Others"/>
+							<span>Others</span>
+					</label>
+				</p>
+				<input  onclick="playPause();" class="formBtn" type="button" value="Submit" />
+			</form>
+		</div>
+</div>
+<div id="myForm2" style="">
+		<div id="contactForm">
+			<h2>What is your budget? ($)</h2>			
+			<form action="#">
+				<p>
+					<label>
+							<input type="range" name="range" id="range_weight" value="5" min="1" max="7203.25" oninput="userInput.value= str + range_weight.value;">
+							<span>budget = </span>
+					</label>					
+				</p>
+				<input  onclick="playPause();" class="formBtn" type="button" value="Submit" />
+			</form>
+		</div>
+</div>
+<div id="myForm3" style="">
+		<div id="contactForm">
+			<h2>Is your project urgent?</h2>			
+			<form >
+				<p>
+					<label>
+							<input type="radio" name="urgent" value="Yes">
+							<span>Yes</span>
+					</label>
+					<label>
+							<input type="radio" name="urgent" value="No">
+							<span>No</span>
+					</label>
+				</p>
+				<input  onclick="playPause();" class="formBtn" type="button" value="Submit" />
+			</form>
+		</div>
+</div>
+<div id="myForm4" style="">
+    <div id="contactForm" class="fullwidth">
+        <h2>Please fill in your details.</h2>			
+        <form>
+                <div class="lf">
+                    <input type="text" class="form-control" name='name' id='name' placeholder="Name" required="">
+                    <input type="text" class="form-control" name='phone' id='phone' placeholder="Phone" required="">
+                    <input type="email" class="form-control" name='email' id='email' placeholder="Email" required="">
+                </div>
+                <div class="rf">                    
+                <textarea class="form-control" rows="3" name='message' id='message' placeholder="Message.." required=""></textarea>
+                <input  onclick="playPause();" class="formBtn lastbtn" type="button" value="Submit" />
+                </div>
+            
+        </form>
+    </div>
+</div>
+  <div id="video_controls_bar">
+    <button id="playpausebtn">Play</button>
+    <input id="seekslider" type="range" min="0" max="100" value="0" step="1">
+    <span id="curtimetext">00:00</span> / <span id="durtimetext">00:00</span>
+    <button id="mutebtn">Mute</button>
+    <input id="volumeslider" type="range" min="0" max="100" value="100" step="1">
+    <button id="fullscreenbtn">[Zoom]</button>
+  </div>
+</div>
+</body>
+</html>

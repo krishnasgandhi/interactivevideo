@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+
+        <!-- budget slider -->
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" href="css/price-slider.css">
+        <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+        <script src="js/price-slider.js"></script>
+        <!-- End -->
+
+        <!-- validation-->
+        <script src="js/form.js"></script>
+        <!-- End -->
+
+        <!-- video-->
+        <script src="js/video.js"></script>
+        <!-- End-->
+    </head>
+    <body>
+        <div id="video_player_box">
+            <video id="my_video" autoplay preload="auto">
+                <source src="tridibsir.mp4">
+            </video>
+            <div id="clickid" style="color:blue;display: none;position:fixed; left: 819px;top: 232px; background-color:yellow;" onclick="playPause();
+                    showForm('myForm');">Click here Sign up</div>
+            <!-- industry-->
+            <div id="myForm" style="">
+                <div id="contactForm">
+                    <h2>We would like to know your industry?</h2>			
+                    <form id="industryForm" name="industry-form">
+                        <p>
+                            <label>
+                                <input type="radio" name="industry" value="Travel Agent" checked>
+                                <span>Travel Agent </span>
+                            </label>
+                            <label>
+                                <input type="radio" name="industry" value="Hotel Or Retaurant Owner">
+                                <span>Hotel Or Restaurant Owner</span>
+                            </label><br/>
+                            <label>
+                                <input type="radio" name="industry" value="Event Management Company">
+                                <span>Event Management Company</span>
+                            </label><br/>
+                            <label>
+                                <input type="radio" name="industry" value="Education Institution">
+                                <span>Education Institution</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="industry" value="Other">
+                                <span>Other</span>
+                            </label>
+                        </p>
+                        <input  onclick="playPause();" class="formBtn" type="button" value="Submit" />
+                    </form>
+                </div>
+            </div>
+            <!-- End-->
+
+            <!-- Services form-->
+            <div id="myForm1" style="">
+                <div id="contactForm">
+                    <h2>What services are you looking for?</h2>			
+                    <form name="services-form" id="services-form">
+                        <p>
+                            <span id="services_error"></span>
+                            <br/>
+                            <label>
+                                <input type="checkbox" name="services[]" value="Website Design"/>
+                                <span>Website Design</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="services[]" value="App Development"/>
+                                <span>App Development</span>
+                            </label><br/>
+                            <label>
+                                <input type="checkbox" name="services[]" value="Search Engine Optimization"/>
+                                <span>Search Engine Optimization</span>
+                            </label><br/>
+                            <label>
+                                <input type="checkbox" name="services[]" value="Social Media Marketing"/>
+                                <span>Social Media Marketing</span>
+                            </label><br/>
+                            <label>
+                                <input type="checkbox" name="services[]" value="E-commerce Platform"/>
+                                <span>E-commerce Platform</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="services[]" value="Augmented Reality"/>
+                                <span>Augmented Reality</span>
+                            </label><br/>
+                            <label>
+                                <input type="checkbox" name="services[]" value="Virtual Reality"/>
+                                <span>Virtual Reality</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="services[]" value="Others"/>
+                                <span>Others</span>
+                            </label>
+                        </p>
+                        <input class="formBtn" type="submit" value="Submit" />
+                    </form>
+                </div>
+            </div>
+            <!-- End-->
+
+            <!-- Budget form-->
+            <div id="myForm2" style="">
+                <div id="contactForm">
+                    <h2>What is your budget? ($)</h2>	
+                    <br/>
+                    <span id="budget_error" class="error"></span>
+                    <br/>
+                    <form name="budget-form" id="budget-form">
+                        <div class="form-group">
+                            <div id="slider"></div>
+                            <div class="col-sm-6">
+                                <input type="hidden" id="amount" class="form-control">
+                                <p class="price lead" id="amount-label"></p>
+                                <span class="price">.00</span>
+                            </div>
+                        </div>
+                        <input class="formBtn" id="budgetButton" type="button" value="Submit" />
+                    </form>
+                </div>
+            </div>
+            <!-- End-->
+
+            <!-- urgent form-->
+            <div id="myForm3" style="">
+                <div id="contactForm">
+                    <h2>Is your project urgent?</h2>			
+                    <form >
+                        <p>
+                            <label>
+                                <input type="radio" name="urgent" value="Yes" checked>
+                                <span>Yes</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="urgent" value="No">
+                                <span>No</span>
+                            </label>
+                        </p>
+                        <input  onclick="playPause();" class="formBtn" type="button" value="Submit" />
+                    </form>
+                </div>
+            </div>
+            <!-- End-->
+
+            <!-- user details form-->
+            <div id="myForm4" style="">
+                <div id="contactForm" class="fullwidth">
+                    <h2>Please fill in your details.</h2>			
+                    <form name="user-details" id="user-details">
+                        <div class="lf form-group">
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Name" >
+                            <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone">
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Email">
+                        </div>
+                        <div class="rf form-group">                    
+                            <textarea class="form-control" rows="3" name="message" id="message" placeholder="Message.." required=""></textarea>
+                            <input class="formBtn lastbtn" type="submit" value="Submit" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- End-->
+
+            <div id="video_controls_bar">
+                <button id="playpausebtn"  class="play"></button>
+                <input id="seekslider" type="range" min="0" max="100" value="0" step="1">
+                <span id="curtimetext">00:00</span> / <span id="durtimetext">00:00</span>
+                <button id="mutebtn">Mute</button>
+                <input id="volumeslider" type="range" min="0" max="100" value="100" step="1">
+                <button id="fullscreenbtn">[Zoom]</button>
+            </div>
+            <p>This prototype is just for demo purpose.Not to be taken as a complete product.</p>
+        </div>
+    </body>
+</html>
